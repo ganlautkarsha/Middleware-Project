@@ -56,19 +56,19 @@ public class OCRDisplayActivity extends AppCompatActivity {
         if (storeName.toLowerCase().equals("walmart") | storeName.toLowerCase().equals("terget")) {
             List<String> OCRLineList = Arrays.asList(OCRText.split("\n"));
             ArrayList<String> OCRNameList = new ArrayList<>();
-            ArrayList<Double> OCRPriceArray = new ArrayList<>();
+
             OCRNameList.addAll(OCRLineList);
             for (String line: OCRLineList) {
                 if (line.matches("(\\$?s?(\\d{1,3}\\.?\\d{2}))")) {
                     OCRNameList.remove(line);
                     dollarTextField.setText("$");
-
                     if (line.matches("\\d{4}")) {
-                        OCRPriceArray.add(Double.valueOf(line.replaceAll("[^\\d.]", "").substring(0,2) + "." + line.substring(2)));
+                        OCRPrice.setText(line.replaceAll("[^\\d.]", "").substring(0,2) + "." + line.substring(2));
                     }
                     else {
-                        OCRPriceArray.add(Double.valueOf(line.replaceAll("[^\\d.]", "")));
+                        OCRPrice.setText(line.replaceAll("[^\\d.]", ""));
                     }
+                    break;
                 }
                 else {
                     dollarTextField.setText("");
@@ -76,14 +76,6 @@ public class OCRDisplayActivity extends AppCompatActivity {
                 }
             }
 
-            double temp = 0.0;
-            double finalPrice = 0.0;
-            for (int i = 0; i < OCRPriceArray.size(); i++) {
-                if (finalPrice < OCRPriceArray.get(i)) {
-                    finalPrice = OCRPriceArray.get(i);
-                }
-            }
-            OCRPrice.setText(String.valueOf(finalPrice));
             OCRItem.setText(OCRNameList.get(0).toUpperCase());
             storeTextView.setText(storeName);
         }
