@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Shopping Assistant</string>
+    <string name="txt_message">No Text Available</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+
+    <string-array name="storeNames">
+        <item>Walmart</item>
+        <item>Wholesosome Choice</item>
+        <item>Target</item>
+    </string-array>
+</resources>
