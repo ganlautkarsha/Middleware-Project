@@ -1,13 +1,14 @@
 package middleware.grocery.shopping;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.app.AlertDialog;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 public class BuyActivity extends AppCompatActivity {
     ArrayList<String> shoppingList = null;
     ArrayAdapter<String> adapter = null;
@@ -33,9 +35,12 @@ public class BuyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestPermissions();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         shoppingList = getArrayVal(getApplicationContext());
@@ -65,6 +70,7 @@ public class BuyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startIntent = new Intent(getApplicationContext(), GroceryStoreDisplayActivity.class);
+                startIntent.putExtra("middleware.grocery.shopping.shopping.list", shoppingList);
                 startActivity(startIntent);
             }
         });
@@ -182,6 +188,10 @@ public class BuyActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
 }
