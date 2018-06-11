@@ -148,6 +148,9 @@ public class listServlet extends HttpServlet {
 				radius=list.getInt(key);
 			}
 		}
+		// SampleConsumer(items);
+		SampleConsumer consumer=new SampleConsumer(items);
+            
 		for(String s:items)
 			System.out.println(s);
 		System.out.println("Radius = " + radius);
