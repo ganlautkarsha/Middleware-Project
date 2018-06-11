@@ -10,6 +10,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,17 +153,20 @@ public class listServlet extends HttpServlet {
 		System.out.println("Radius = " + radius);
 		originLocation=Double.toString(locX) + "," + Double.toString(locY);
 		System.out.println("Loc x = "+Double.toString(locX)+"\nLoc y = "+Double.toString(locY));
-		somefunction();
+		String result=somefunction();
+		response.getWriter().append(result);
 	}
 	public String somefunction()
 	{
 		ArrayList<String> stores = new ArrayList<String>();
+		JSONObject retJson = new JSONObject();
 		try {
-			String query = "select * from storesTable;";
+			String query = "select * from store;";
 			//Class.forName("com.postgresql.jdbc.Driver");		
     		Class.forName("org.postgresql.Driver");
     		System.out.println("Query is : " +query);
-			Connection connect = DriverManager.getConnection("jdbc:postgresql://localhost:5432/middleware?user=postgres&password=coupde4$grace&useSSL=false");
+			//Connection connect = DriverManager.getConnection("jdbc:postgresql://localhost:5432/middleware?user=postgres&password=coupde4$grace&useSSL=false");
+			Connection connect = DriverManager.getConnection("jdbc:postgresql://localhost:5432/middlewaredb?user=postgres&password=passwd&useSSL=false");
 			//Connection connect = DriverManager.getConnection("jdbc:postgresql://localhost:5432/middleware?user=postgres&password=passwd&useSSL=true");
 			Statement stmt = connect.createStatement();
 			ResultSet rs = stmt.executeQuery(query);//connect.prepareStatement(query).execute();
@@ -172,9 +176,9 @@ public class listServlet extends HttpServlet {
 			while(rs.next())
 			{
 				System.out.println(rs.getString(1) + " " + rs.getDouble(2) + " " + rs.getDouble(3));
-				String storename = rs.getString("Store");
-				double locX=rs.getDouble("locX");//rs.getDouble(1);
-				double locY=rs.getDouble("locY");
+				String storename = rs.getString("storename");
+				double locX=rs.getDouble("locx");//rs.getDouble(1);
+				double locY=rs.getDouble("locy");
 				String location= Double.toString(locX) + "," + Double.toString(locY);
 				String destination = "destinations="+location;
 				mapURL = mapURL + origins + "&" + destination + "&" + key;
@@ -183,29 +187,42 @@ public class listServlet extends HttpServlet {
 					stores.add(storename);
 					
 			}
+			
 			for(int i=0;i<stores.size();i++)
 			{
 				double storecost=0;
 				String store=stores.get(i);
+				HashMap<String,String> prices = new HashMap<String,String>();
 				for(int j=0;j<items.size();j++)
 				{
 					String item=items.get(j);
-					String pricequery = "select price from catalog where store='"+store+"' and item='"+item+"' order by date desc;";
-					rs=stmt.executeQuery(pricequery);
-					String priceStr="";
-					if(rs.next())
-					{
-						priceStr=rs.getString("price");
+					String pricequery = "select price from catalog where storename='"+store+"' and item='"+item+"' order by date desc;";
+					try {
+						rs=stmt.executeQuery(pricequery);						
+						String priceStr="";
+						if(rs.next())
+						{
+							priceStr=rs.getString("price");
+						}
+						if(priceStr.equals(""))
+						{
+							// item not found
+							prices.put(item,"0");
+						}
+						else
+						{
+							prices.put(item, priceStr);
+							storecost+=Double.parseDouble(priceStr);
+						}
 					}
-					if(priceStr.equals(""))
+					catch(SQLException e)
 					{
 						// item not found
-					}
-					else
-					{
-						storecost+=Double.parseDouble(priceStr);
+						prices.put(item,"0");
 					}
 				}
+				retJson.append(store, prices);
+
 			}
 			connect.close();
 			
@@ -215,6 +232,7 @@ public class listServlet extends HttpServlet {
     		e.printStackTrace();
     		return e.toString();
     	}
+		System.out.println(retJson.toString());
     	return "ok";
 	}
 	public double someotherfunction(String url) throws MalformedURLException
