@@ -15,62 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "737983650763-7gcffbivr8ofna0ekvtganavg7uvjagc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "middleware.grocery.shopping",
-            "certificate_hash": "315610eaa3de14915e746237946767b3201cb285"
-          }
-        },
-        {
-          "client_id": "737983650763-8t38i0f5qlsd4vodncuh6eepvrpnhnng.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "737983650763-8t38i0f5qlsd4vodncuh6eepvrpnhnng.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDwJ61mxQlDLkq0ohNMWSW153YuEpAQ368"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "737983650763-8t38i0f5qlsd4vodncuh6eepvrpnhnng.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:737983650763:android:ca5d0044d45955c7",
-        "android_client_info": {
-          "package_name": "middleware.groceryshopping"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "737983650763-krt8ea11ts5qvannioe23aot6ttqs534.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "middleware.groceryshopping",
-            "certificate_hash": "315610eaa3de14915e746237946767b3201cb285"
-          }
-        },
-        {
           "client_id": "737983650763-8t38i0f5qlsd4vodncuh6eepvrpnhnng.apps.googleusercontent.com",
           "client_type": 3
         },

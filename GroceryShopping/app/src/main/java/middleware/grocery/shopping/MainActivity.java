@@ -1,12 +1,20 @@
 package middleware.grocery.shopping;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +24,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel =
+                    new NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+            mChannel.setDescription(Constants.CHANNEL_DESCRIPTION);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token", "FCM: " + token);
+        EditText ID = findViewById(R.id.ID);
+        ID.setText(token);
         Button uploadActivityBtn = findViewById(R.id.uploadbtn);
         Button buyActivityBtn = findViewById(R.id.buybtn);
 
