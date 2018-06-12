@@ -9,8 +9,19 @@
 
     <string-array name="storeNames">
         <item>Walmart</item>
-        <item>Wholesosome Choice</item>
+        <item>Wholesosome Choice Market</item>
         <item>Target</item>
     </string-array>
+
+    <string-array name="preferredDistance">
+        <item>1 Mile</item>
+        <item>3 Miles</item>
+        <item>5 Miles</item>
+        <item>9 Miles</item>
+    </string-array>
+
     <string name="title_activity_grocery_store_display">GroceryStoreDisplayActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

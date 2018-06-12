@@ -46,10 +46,10 @@ public class src {
     }
 	public static void main(String[] args) throws IOException
 	{
-		String address = "35.188.26.231";
-		String samplejson = "{\"list\":\"apple,Banana,Orange,pineapple,watermelon\",\"locX\":33.6427314,\"locY\":-117.8410211,\"radius\":3}";
-		//String address = "localhost";
-		url=new URL("http://"+address+":8080/Server/listServlet");
+		//String address = "104.154.197.139";
+		String samplejson = "{\"list\": \"apple,Banana,Orange\", \"locX\": 33.64859, \"locY\": -117.8399, \"radius\": 5}";
+		String address = "localhost";
+		url=new URL("http://"+address+":8080/middleserver/listServlet");
 		try
 		{
 		HttpURLConnection connection =  (HttpURLConnection)url.openConnection(); 
