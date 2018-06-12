@@ -148,6 +148,9 @@ public class listServlet extends HttpServlet {
 				radius=list.getInt(key);
 			}
 		}
+		// SampleConsumer(items);
+		SampleConsumer consumer=new SampleConsumer(items);
+            
 		for(String s:items)
 			System.out.println(s);
 		System.out.println("Radius = " + radius);
@@ -159,6 +162,7 @@ public class listServlet extends HttpServlet {
 	public String somefunction()
 	{
 		ArrayList<String> stores = new ArrayList<String>();
+		String toreturn = "";
 		JSONObject retJson = new JSONObject();
 		try {
 			String query = "select * from store;";
@@ -183,6 +187,7 @@ public class listServlet extends HttpServlet {
 				String destination = "destinations="+location;
 				mapURL = mapURL + origins + "&" + destination + "&" + key;
 				double distance = someotherfunction(mapURL);
+				toreturn+=storename + Double.toString(distance) + "\n";
 				if(distance<=radius)
 					stores.add(storename);
 					
@@ -233,7 +238,8 @@ public class listServlet extends HttpServlet {
     		return e.toString();
     	}
 		System.out.println(retJson.toString());
-    	return "ok";
+		toreturn += retJson.toString();
+    	return toreturn;//retJson.toString();
 	}
 	public double someotherfunction(String url) throws MalformedURLException
 	{
