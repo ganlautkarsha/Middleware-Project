@@ -7,8 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class OCRDisplayActivity extends AppCompatActivity {
@@ -22,7 +25,6 @@ public class OCRDisplayActivity extends AppCompatActivity {
 //        TextView storeNameField = findViewById(R.id.storeName);
 //        storeNameField.setText(text);
 
-
         if (getIntent().hasExtra("middleware.grocery.shopping.storeName")) {
             storeName = getIntent().getExtras().getString("middleware.grocery.shopping.storeName");
         }
@@ -34,22 +36,44 @@ public class OCRDisplayActivity extends AppCompatActivity {
         extractNameAndPrice(storeName, OCRText);
 
         Button retryBtn = findViewById(R.id.retryBtn);
+        Button sendBtn = findViewById(R.id.sendBtn);
 
         retryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startIntent = new Intent(getApplicationContext(), UploadActivity.class);
-                startActivity(startIntent);
-                finish();
+            Intent startIntent = new Intent(getApplicationContext(), UploadActivity.class);
+            startActivity(startIntent);
+            finish();
             }
         });
+
+        final TextView storeTextView = findViewById(R.id.storeName);
+        final EditText OCRItem = findViewById(R.id.OCRItem);
+        final EditText OCRPrice = findViewById(R.id.OCRPrice);
+        final TextView dateView = findViewById(R.id.dateView);
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            Intent startIntent = new Intent(getApplicationContext(), UploadDataActivity.class);
+            startIntent.putExtra("middleware.grocery.shopping.itemPrice", Float.parseFloat(OCRPrice.getText().toString()));
+            startIntent.putExtra("middleware.grocery.shopping.itemName", OCRItem.getText().toString());
+            startIntent.putExtra("middleware.grocery.shopping.date", dateView.getText().toString().split(":")[1].trim());
+            startIntent.putExtra("middleware.grocery.shopping.storeName", storeTextView.getText().toString());
+            startActivity(startIntent);
+            finish();
+            }
+        });
+
+        getDate();
     }
 
     private void extractNameAndPrice (String storeName, String OCRText) {
+        TextView dollarTextField = findViewById(R.id.dollarTextField);
+
         TextView storeTextView = findViewById(R.id.storeName);
         EditText OCRItem = findViewById(R.id.OCRItem);
         EditText OCRPrice = findViewById(R.id.OCRPrice);
-        TextView dollarTextField = findViewById(R.id.dollarTextField);
 
         if (storeName.toLowerCase().equals("walmart") | storeName.toLowerCase().equals("terget")) {
             List<String> OCRLineList = Arrays.asList(OCRText.split("\n"));
@@ -73,12 +97,19 @@ public class OCRDisplayActivity extends AppCompatActivity {
                     OCRPrice.setHint("No Price Found. Please Enter.");
                 }
             }
-
             OCRItem.setText(OCRNameList.get(0).toUpperCase());
             storeTextView.setText(storeName);
         }
         else {
             storeTextView.setText(storeName);
         }
+    }
+
+    private void getDate() {
+        TextView dateView = findViewById(R.id.dateView);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat mdformat = new SimpleDateFormat("YYYY-MM-dd");
+        String strDate = "Date: " + mdformat.format(calendar.getTime());
+        dateView.setText(strDate);
     }
 }

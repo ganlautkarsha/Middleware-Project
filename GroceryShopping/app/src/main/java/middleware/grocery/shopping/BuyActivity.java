@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -18,8 +20,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +39,9 @@ public class BuyActivity extends AppCompatActivity {
     ArrayList<String> shoppingList = null;
     ArrayAdapter<String> adapter = null;
     ListView lv = null;
+
+    double longitude = 0;
+    double latitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +75,40 @@ public class BuyActivity extends AppCompatActivity {
 
         });
 
-        FloatingActionButton fab = findViewById(R.id.analyzeList);
+        Spinner spinner = findViewById(R.id.spinner1);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.preferredDistance, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        /***************************Location Code Start*********************************/
+
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+//                    loadWordTextView.append("Longitude: " + location.getLongitude() + "\n" + "Latitude: " + location.getLatitude());
+//                        locationCoordinates.put("Longitude", location.getLongitude());
+//                        locationCoordinates.put("Latitude", location.getLatitude());
+                    longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                }
+            }
+        });
+
+        final FloatingActionButton fab = findViewById(R.id.analyzeList);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Spinner spinner1 = findViewById(R.id.spinner1);
                 Intent startIntent = new Intent(getApplicationContext(), GroceryStoreDisplayActivity.class);
                 startIntent.putExtra("middleware.grocery.shopping.shopping.list", shoppingList);
+                startIntent.putExtra("middleware.grocery.shopping.preferred.distance", spinner1.getSelectedItem().toString());
+                startIntent.putExtra("middleware.grocery.shopping.longitude", longitude);
+                startIntent.putExtra("middleware.grocery.shopping.latitude", latitude);
                 startActivity(startIntent);
             }
         });
